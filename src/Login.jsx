@@ -8,7 +8,7 @@ export default function Login() {
   const [cargando, setCargando] = useState(false);
 
   // 👇 ¡ESTA ES LA URL DE TU LOGO! Cámbiala luego por tu archivo (ej. '/logo.png')
-  const urlDelLogo  = '/png' ; // Placeholder de Marvin
+  const urlDelLogo  = '/' ; // Placeholder de Marvin
 
   const manejarLogin = async (e) => {
     e.preventDefault();

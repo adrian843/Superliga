@@ -235,3 +235,70 @@ h1, h2, h3 {
   background: linear-gradient(rgba(15, 23, 42, 0.8), rgba(15, 23, 42, 1)), url('Fondo.png') center/cover;
   border-bottom: 1px solid rgba(255,255,255,0.1);
 }
+/* --- RESPONSIVE DESIGN (MÓVILES Y TABLETS) --- */
+
+@media (max-width: 768px) {
+  
+  /* 1. Ajustar el contenedor principal para que no toque los bordes */
+  .app-container {
+    padding: 10px;
+  }
+
+  /* 2. Barra de Navegación */
+  .navbar {
+    flex-direction: column; /* Apilar elementos hacia abajo */
+    padding: 15px;
+    gap: 15px;
+  }
+  
+  .nav-links {
+    flex-wrap: wrap; /* Permitir que los enlaces bajen de línea si no caben */
+    justify-content: center;
+    gap: 15px;
+  }
+
+  /* 3. Hero Section (Bienvenidos) */
+  .hero-section h1 {
+    font-size: 2rem !important; /* Texto más pequeño */
+  }
+  .hero-section p {
+    font-size: 1rem !important;
+  }
+
+  /* 4. Romper las cuadrículas (Grids) para apilarlas verticalmente */
+  .grid-top, .grid-bottom {
+    grid-template-columns: 1fr; /* 1 sola columna en lugar de 2 */
+  }
+
+  /* 5. Cajas de Formularios de Goles (Admin) */
+  .score-inputs {
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .score-box input {
+    width: 100%; /* Que el input del marcador ocupe todo el ancho */
+  }
+
+  /* 6. Tablas Deportivas (Scroll Horizontal) */
+  /* Si la tabla tiene muchas columnas, permitimos que se deslice de lado a lado */
+  .card {
+    overflow-x: auto; 
+    padding: 15px; /* Un poco menos de espacio adentro de las tarjetas */
+  }
+
+  /* 7. Encabezado del Panel Privado */
+  /* El título y los botones (Cerrar Sesión, Ver como DT) */
+  .app-container > div:first-child {
+      flex-direction: column;
+      align-items: flex-start !important;
+  }
+}
+
+/* Ajustes extra para celulares muy delgados (iPhone SE) */
+@media (max-width: 480px) {
+  .sports-table th, .sports-table td {
+    padding: 8px 5px; /* Letras más juntas en las tablas */
+    font-size: 0.85rem;
+  }
+}
