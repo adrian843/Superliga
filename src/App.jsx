@@ -10,10 +10,15 @@ import PanelAdmin from './PanelAdmin';
 import Premios from './Premios'; // Asegúrate de tenerlo importado si lo agregaste en el paso anterior
 import PartidosPublicos from './PartidosPublicos';
 import TransmisionEnVivo from './TransmisionEnVivo';
+import CarruselGaleria from './CarruselGaleria';
+import Patrocinadores from './Patrocinadores';
 
 export default function App() {
   const [sesion, setSesion] = useState(null);
   const [mostrarPantallaLogin, setMostrarPantallaLogin] = useState(false);
+  
+  // 👇 NUEVO ESTADO PARA EL MENÚ MÓVIL
+  const [menuAbierto, setMenuAbierto] = useState(false)
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -56,14 +61,20 @@ export default function App() {
             </button>
           </div>
         </div>
-        
-        {/* 🚦 CONTROL DE ACCESO AUTOMÁTICO */}
-        {esAdmin ? <PanelAdmin /> : <DashboardDT />}
 
-        <div className="grid-bottom" style={{ marginTop: '20px' }}>
-          <TablaPosiciones />
-          <TablaGoleo />
-        </div>
+       {/* 🚦 CONTROL DE ACCESO AUTOMÁTICO */}
+        {esAdmin ? (
+          <>
+            <PanelAdmin />
+            {/* Las tablas generales solo las ve el Admin en su panel */}
+            <div className="grid-bottom" style={{ marginTop: '20px' }}>
+              <TablaPosiciones />
+              <TablaGoleo />
+            </div>
+          </>
+        ) : (
+          <DashboardDT /> // El DT ya trae sus propias tablas por dentro
+        )}
       </div>
     );
   }
@@ -85,26 +96,46 @@ export default function App() {
 
   // 3. VISTA POR DEFECTO: Landing Page (Pública)
   return (
-    <div>
-     <nav className="navbar" style={{ borderBottom: `2px solid ${configLiga.colorPrincipal}` }}>
-        <h1 className="logo-nav">
-          {configLiga.nombreOficial}
-        </h1>
-        <ul className="nav-links">
-          <li><a href="#inicio">Inicio</a></li>
-          <li><a href="#jornada">Próxima Jornada</a></li>
-          <li><a href="#tablas">Estadísticas</a></li>
+    <>
+      {/* Barra de Navegación Pública */}
+      <nav className="navbar">
+        <div className="navbar-container">
+          <h1 className="logo-nav">Liga <span>La Bandera</span></h1>
+
+          {/* Botón de Hamburguesa (Solo visible en móviles) */}
+          <button className="menu-toggle" onClick={() => setMenuAbierto(!menuAbierto)}>
+            {menuAbierto ? '✖' : '☰'}
+          </button>
+        </div>
+
+        {/* Enlaces (Se ocultan/muestran en móvil según el estado menuAbierto) */}
+        <ul className={`nav-links ${menuAbierto ? 'active' : ''}`}>
+          <li><a href="#inicio" onClick={() => setMenuAbierto(false)}>Inicio</a></li>
+          <li><a href="#jornada" onClick={() => setMenuAbierto(false)}>Próxima Jornada</a></li>
+          <li><a href="#tablas" onClick={() => setMenuAbierto(false)}>Estadísticas</a></li>
+
+          {/* Botón de Login para móviles (dentro del menú desplegable) */}
+          <li className="mobile-login">
+            <button className="btn-login" onClick={() => { setMostrarPantallaLogin(true); setMenuAbierto(false); } } style={{ width: '100%' }}>
+              Iniciar Sesión
+            </button>
+          </li>
         </ul>
-        <button className="btn-login" onClick={() => setMostrarPantallaLogin(true)}>
+
+        {/* Botón de Login para computadoras (a la derecha) */}
+        <button className="btn-login desktop-login" onClick={() => setMostrarPantallaLogin(true)}>
           Iniciar Sesión
         </button>
       </nav>
-
       <div className="hero-section" id="inicio">
-        <h1 style={{ fontSize: '3rem', margin: '0 0 10px 0' }}>{configLiga.textoHero}</h1>
-        <p style={{ fontSize: '1.2rem', color: 'var(--text-muted)' }}>{configLiga.slogan}</p>
+        <h1 style={{ fontSize: '3rem', margin: '0 0 10px 0' }}>FÚTBOL AMATEUR DE ALTO NIVEL</h1>
+        <p style={{ fontSize: '1.2rem', color: 'var(--text-muted)' }}>La liga donde la pasión y el deporte se encuentran. ¡Disfruta cada partido!</p>
       </div>
 
+      {/* 👇 NUEVO: Galería de Imágenes 👇 */}
+      <div className="app-container" style={{ marginTop: '40px' }}>
+        <CarruselGaleria />
+      </div>
       {/* 👇 NUEVA SECCIÓN: Calendario y En Vivo 👇 */}
       <div className="app-container" id="jornada" style={{ marginTop: '40px' }}>
         <div className="grid-top">
@@ -127,15 +158,19 @@ export default function App() {
         <Premios />
       </div>
 
+      {/* 👇 NUEVA SECCIÓN DE PATROCINADORES 👇 */}
+      <Patrocinadores />
+
       <footer style={{ textAlign: 'center', padding: '40px', backgroundColor: 'var(--card-bg)', marginTop: '40px', borderTop: `2px solid ${configLiga.colorPrincipal}` }}>
         <h2>CONTACTO</h2>
         <p>📍 {configLiga.sede}</p>
         <p>📞 {configLiga.telefonoContacto}</p>
         <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginTop: '20px' }}>
-          © {new Date().getFullYear()} {configLiga.nombreOficial}. Desarrollado por [Tu Nombre/Agencia].
+          © {new Date().getFullYear()} {configLiga.nombreOficial}. Desarrollado por [Adrian Ramirez/5olutions].
         </p>
       </footer>
-    </div>
+    </>
   );
 }
+
 

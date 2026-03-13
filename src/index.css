@@ -236,6 +236,73 @@ h1, h2, h3 {
   border-bottom: 1px solid rgba(255,255,255,0.1);
 }
 /* --- RESPONSIVE DESIGN (MÓVILES Y TABLETS) --- */
+/* Agrega esto ANTES del @media */
+.menu-toggle {
+  display: none; /* Oculto en computadoras */
+  background: transparent;
+  color: white;
+  border: none;
+  font-size: 2rem;
+  cursor: pointer;
+}
+
+.mobile-login {
+  display: none;
+}
+
+/* --- RESPONSIVE DESIGN (MÓVILES Y TABLETS) --- */
+@media (max-width: 768px) {
+  
+  /* Hacemos visible el botón de hamburguesa */
+  .menu-toggle {
+    display: block;
+  }
+
+  /* Ajustamos el contenedor de la barra */
+  .navbar-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+  }
+  
+  .navbar {
+    flex-direction: column;
+    padding: 15px;
+  }
+  
+  /* Ocultamos los enlaces por defecto y los mostramos en columna */
+  .nav-links {
+    display: none;
+    flex-direction: column;
+    width: 100%;
+    text-align: center;
+    padding-top: 15px;
+    gap: 20px;
+  }
+
+  /* Esta clase se activará con React cuando demos clic */
+  .nav-links.active {
+    display: flex;
+  }
+
+  /* Ocultamos el botón de login normal y mostramos el del menú */
+  .desktop-login {
+    display: none;
+  }
+
+  .mobile-login {
+    display: block;
+    margin-top: 10px;
+  }
+
+  /* ... (mantén el resto de tus estilos @media aquí) ... */
+  .app-container { padding: 10px; }
+  .grid-top, .grid-bottom { grid-template-columns: 1fr; }
+  .score-inputs { flex-direction: column; gap: 10px; }
+  .score-box input { width: 100%; }
+  .card { overflow-x: auto; padding: 15px; }
+}
 
 @media (max-width: 768px) {
   
@@ -300,5 +367,48 @@ h1, h2, h3 {
   .sports-table th, .sports-table td {
     padding: 8px 5px; /* Letras más juntas en las tablas */
     font-size: 0.85rem;
+  }
+}
+
+/* --- ANIMACIÓN PARA PATROCINADORES --- */
+.patrocinadores-container {
+  overflow: hidden;
+  white-space: nowrap;
+  width: 100%;
+  padding: 30px 0;
+  background: rgba(255, 255, 255, 0.02);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.patrocinadores-track {
+  display: inline-block;
+  animation: scroll-patrocinadores 25s linear infinite;
+}
+
+/* Duplicamos el track en el HTML, así que este segundo corre detrás para que no haya espacios en blanco */
+.patrocinadores-track img {
+  height: 60px; /* Tamaño de los logos */
+  margin: 0 40px; /* Separación entre logos */
+  filter: grayscale(100%) opacity(0.7); /* Los hace ver en blanco y negro y un poco transparentes */
+  transition: all 0.3s ease;
+  vertical-align: middle;
+}
+
+/* Cuando pasas el mouse, el logo cobra color y resalta */
+.patrocinadores-track img:hover {
+  filter: grayscale(0%) opacity(1);
+  transform: scale(1.1);
+}
+
+@keyframes scroll-patrocinadores {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-100%); }
+}
+
+@media (max-width: 768px) {
+  .patrocinadores-track img {
+    height: 40px;
+    margin: 0 20px;
   }
 }

@@ -55,7 +55,7 @@ export default function Login() {
           />
           <input 
             type="password" 
-            placeholder="Contraseña (Liga123456)" 
+            placeholder="Contraseña" 
             className="form-control"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
