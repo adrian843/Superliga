@@ -1,6 +1,7 @@
 // src/DashboardDT.jsx
 import { useEffect, useState } from 'react';
 import { supabase } from './supabaseClient';
+import { jsPDF } from "jspdf";
 
 export default function DashboardDT() {
   const [proximoPartido, setProximoPartido] = useState(null);
@@ -8,6 +9,7 @@ export default function DashboardDT() {
   const [ultimosPartidos, setUltimosPartidos] = useState([]);
   const [goleadores, setGoleadores] = useState([]);
   const [pestañaActiva, setPestañaActiva] = useState('partido');
+  const [descargarpdf, setDescargarPdf] = useState(false);
 
   const equipoId = 5; // Cuervos
   const nombreEquipo = 'Cuervos';
@@ -26,7 +28,7 @@ export default function DashboardDT() {
         .eq('id_equipo', equipoId).order('numero_dorsal', { ascending: true });
       if (dataPlan) setPlantilla(dataPlan);
 
-      // 3. Últimos 5 Partidos ¡AHORA CON TARJETAS INCLUIDAS! 🔍
+     // 3. Últimos 5 Partidos ¡AHORA CON TARJETAS INCLUIDAS! 🔍
       const { data: dataUltimos } = await supabase.from('partidos')
         .select(`
           id_partido, 
@@ -58,12 +60,32 @@ export default function DashboardDT() {
     color: 'white', border: 'none', borderRadius: '6px', cursor: 'pointer', fontWeight: 'bold', flex: '1', minWidth: '120px'
   });
 
+  //descargar pdf de plantilla del equipo o resumen del próximo partido
+  const descargarPdf = async () => {
+      setDescargarPdf(true);
+      // Aquí iría la lógica para generar y descargar el PDF usando jsPDF o una librería similar
+      // Por ejemplo, podrías crear un PDF con la plantilla del equipo o el resumen del próximo partido
+      // Luego, una vez generado, usar jsPDF para descargarlo automáticamente
+      // Ejemplo básico:
+      const doc = new jsPDF();
+      doc.text("Plantilla del Equipo", 10, 10);
+      plantilla.forEach((jugador, index) => {
+        doc.text(`${jugador.numero_dorsal} - ${jugador.nombre_completo}`, 10, 20 + index * 10);
+      });
+      doc.save("plantilla_equipo.pdf");
+      
+      setDescargarPdf(false);
+    }
+
   return (
     <div className="card" style={{ borderTop: '4px solid #3b82f6', marginBottom: '20px' }}>
       
       <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', marginBottom: '20px' }}>
         <button style={tabStyle('partido')} onClick={() => setPestañaActiva('partido')}>🏟️ Resumen del Equipo</button>
         <button style={tabStyle('plantilla')} onClick={() => setPestañaActiva('plantilla')}>👕 Mi Plantilla</button>
+        <button style={{ ...tabStyle('pdf'), background: '#3a80cb' }} onClick={descargarPdf} disabled={descargarpdf}>
+          {descargarpdf ? 'Generando PDF...' : '📥 Descargar PDF'}
+        </button>
       </div>
 
       {pestañaActiva === 'partido' && (
